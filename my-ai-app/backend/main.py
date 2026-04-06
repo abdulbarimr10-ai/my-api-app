@@ -28,10 +28,28 @@ class Query(BaseModel):
 def home():
     return {"status": "Backend is Live"}
 
+import logging
+
+# Configure logging to show time and severity
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
+
 @app.post("/chat")
 async def chat(query: Query):
-    # This is where your AI logic lives
-    return {"response": f"AI processed: {query.text}"}
+    logger.info(f"RECIEVED INPUT: {query.text}")
+    try:
+        # Simulate your AI logic
+        response_text = f"AI processed: {query.text}"
+        
+        logger.info(f"FINAL OUTPUT: {response_text}")
+        return {"response": response_text}
+    except Exception as e:
+        logger.error(f"SYSTEM FAILURE: {str(e)}", exc_info=True)
+        return {"response": "I encountered an internal error."}
 
 if __name__ == "__main__":
     import uvicorn
