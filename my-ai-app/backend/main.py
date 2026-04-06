@@ -7,7 +7,8 @@ app = FastAPI()
 
 origins = [
     "http://localhost:3000",
-    "https://my-api-app-bari2.vercel.app", # Add your actual Vercel link here
+    "https://my-api-app-sigma.vercel.app",  # Your current active Vercel link
+    "https://my-api-app-bari2.vercel.app",  # Any other aliases you have
 ]
 
 # --- THE SECURITY GUARD (CORS) ---
