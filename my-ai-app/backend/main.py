@@ -30,26 +30,41 @@ def home():
 
 import logging
 
-# Configure logging to show time and severity
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s | %(levelname)s | %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("AI-Logger")
 
+app = FastAPI()
 
 @app.post("/chat")
 async def chat(query: Query):
-    logger.info(f"RECIEVED INPUT: {query.text}")
+    start_time = time.time() # Track how long the AI takes
+    
+    # LOG 1: The Input
+    logger.info(f"--- NEW REQUEST ---")
+    logger.info(f"USER INPUT: {query.text}")
+
     try:
-        # Simulate your AI logic
+        # Simulate your AI Logic
+        # (Replace this with your actual Groq/OpenAI call)
         response_text = f"AI processed: {query.text}"
         
-        logger.info(f"FINAL OUTPUT: {response_text}")
+        # LOG 2: The Success & Timing
+        duration = round(time.time() - start_time, 2)
+        logger.info(f"RESPONSE GENERATED IN: {duration}s")
+        logger.info(f"FINAL OUTPUT: {response_text[:50]}...") # Log first 50 chars
+        
         return {"response": response_text}
+
     except Exception as e:
-        logger.error(f"SYSTEM FAILURE: {str(e)}", exc_info=True)
-        return {"response": "I encountered an internal error."}
+        # LOG 3: The Failure
+        logger.error(f"SYSTEM CRASHED ON INPUT: {query.text}")
+        logger.error(f"ERROR DETAIL: {str(e)}", exc_info=True) # exc_info shows the exact line number
+        
+        raise HTTPException(status_code=500, detail="Internal AI Error")
 
 if __name__ == "__main__":
     import uvicorn
