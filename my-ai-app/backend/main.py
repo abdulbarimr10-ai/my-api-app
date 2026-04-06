@@ -5,6 +5,11 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:3000",
+    "https://my-api-app-sigma.vercel.app/", # Add your actual Vercel link here
+]
+
 # --- THE SECURITY GUARD (CORS) ---
 # In production, replace ["*"] with ["https://your-frontend.vercel.app"]
 app.add_middleware(
